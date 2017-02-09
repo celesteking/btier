@@ -1,4 +1,5 @@
-KDIR := /lib/modules/$(shell uname -r)/build
+KERVER = $(shell uname -r)
+KDIR := /lib/modules/$(KERVER)/build
 PWD := $(shell pwd)
 CC := gcc -O2
 
@@ -30,7 +31,7 @@ pretty:
 	cd cli;$(KDIR)/scripts/Lindent *.c
 	cd cli;rm -f *.c~
 install:
-	install -D -m 755 kernel/btier/btier.ko $(DESTDIR)/lib/modules/`uname -r`/kernel/drivers/block/btier.ko
+	install -D -m 755 kernel/btier/btier.ko $(DESTDIR)/lib/modules/$(KERVER)/kernel/drivers/block/btier.ko
 	install -D -m 755 -s cli/btier_setup $(DESTDIR)/sbin/btier_setup
 	install -D -m 755 -s cli/btier_inspect $(DESTDIR)/sbin/btier_inspect
 	install -D -m 755 rc/btier $(DESTDIR)/etc/init.d/btier
@@ -39,7 +40,7 @@ install:
 	gzip -c man/btier_inspect.1 > man/btier_inspect.1.gz
 	install -D -m 644 man/btier_setup.1.gz $(DESTDIR)/usr/share/man/man1/btier_setup.1.gz
 	install -D -m 644 man/btier_inspect.1.gz $(DESTDIR)/usr/share/man/man1/btier_inspect.1.gz
-	depmod -a
+	depmod -a $(KERVER)
 uninstall:
 	rm $(DESTDIR)/sbin/btier_setup
 	rm $(DESTDIR)/etc/init.d/btier
